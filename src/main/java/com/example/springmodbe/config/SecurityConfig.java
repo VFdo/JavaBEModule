@@ -11,6 +11,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -22,10 +24,11 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/**").permitAll()  // Public authentication endpoints
-//                        .requestMatchers("/api/admin/**").hasRole("ADMIN")  // Only Admins
+                        .requestMatchers("/user/**").hasRole("ADMIN")  // Only Admins
 //                        .requestMatchers("/api/user/**").hasAnyRole("USER", "ADMIN")  // Users & Admins
                         .anyRequest().authenticated()
                 )
+                .formLogin(withDefaults())
 //                .authenticationProvider(authenticationProvider)
 //                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

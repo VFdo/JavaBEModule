@@ -4,16 +4,12 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
-import java.util.List;
-
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Builder
 @Data
-@Getter
-@Setter
 @Table(name="user")
 public class User extends Auditable{
     @NotBlank(message = "Username is required")

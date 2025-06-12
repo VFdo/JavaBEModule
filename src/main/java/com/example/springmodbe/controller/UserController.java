@@ -6,14 +6,24 @@ import com.example.springmodbe.entity.User;
 import com.example.springmodbe.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class UserController {
+
+//    @PostMapping(value = "/login")
+//    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
+//        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.email(), request.password()));
+//        String token = JwtHelper.generateToken(request.email());
+//        return ResponseEntity.ok(new LoginResponse(request.email(), token));
+//    }
+
     private final UserService userService;
     public UserController(UserService userService){
         this.userService = userService;
     }
+
     @PostMapping("/user")
     public ResponseEntity<ApiResponse<User>> setUser(@RequestBody UserDto userDto){
         User user = userService.saveUser(userDto);

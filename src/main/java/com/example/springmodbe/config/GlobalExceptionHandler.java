@@ -5,49 +5,36 @@ import com.example.springmodbe.exception.AlreadyExistsException;
 import com.example.springmodbe.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(AlreadyExistsException.class)
     public ResponseEntity<ApiErrorResponse> handleUserAlreadyExistsException(AlreadyExistsException ex) {
-        ApiErrorResponse response = new ApiErrorResponse(
-                HttpStatus.CONFLICT.value(),
-                ex.getMessage(),
-                "Resource Already Exists"
-        );
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+        return buildResponse(HttpStatus.CONFLICT, ex.getMessage(), "Resource Already Exists");
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ApiErrorResponse> handleResourceNotFoundException(ResourceNotFoundException ex) {
-        ApiErrorResponse response = new ApiErrorResponse(
-                HttpStatus.NOT_FOUND.value(),
-                ex.getMessage(),
-                "Resource Not Found"
-        );
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage(), "Resource Not Found");
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ApiErrorResponse> handleIllegalArgumentException(IllegalArgumentException ex) {
-        ApiErrorResponse response = new ApiErrorResponse(
-                HttpStatus.BAD_REQUEST.value(),
-                ex.getMessage(),
-                "Bad Request"
-        );
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), "Bad Request");
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiErrorResponse> handleGlobalException(Exception ex) {
-        ApiErrorResponse response = new ApiErrorResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "An unexpected error occurred",
-                ex.getMessage()
-        );
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred", ex.getMessage());
     }
-
+    private ResponseEntity<ApiErrorResponse> buildResponse(HttpStatus status, String message, String error) {
+        ApiErrorResponse response = new ApiErrorResponse(
+                status.value(),
+                message,
+                error
+        );
+        return ResponseEntity.status(status).body(response);
+    }
 }
